@@ -10,6 +10,7 @@
 #include "../src/core/common.hpp"
 #include <string>
 #include <iostream>
+#include "../src/core/time_statistic.h"
 
 using namespace std;
 using namespace cv;
@@ -106,7 +107,12 @@ int main(int argc, char **argv)
     yolo_net.setInput(inputBlob);
     std::vector<Mat> out_result;
     cout << "begin do inference " << endl;
-    yolo_net.forward(out_result, outNames);
+    for (int i = 0; i < 5; ++i)
+    {
+        TimeStatistic time_obj;
+        yolo_net.forward(out_result, outNames);
+        cout << "inference cost time is " << time_obj.ShowTime() << endl;
+    }
     cout << "do inference ok" << endl;
     cout << "output result size is " << out_result.size() << endl;
 
@@ -169,7 +175,7 @@ int main(int argc, char **argv)
         PostProcess(box, img_w, img_h, net_w, net_h);
         rectangle(frame, box, Scalar(0, 0, 255), 2, 8, 0);
     }
-    imshow("YOLOv4-Detections", frame);
-    waitKey(0);
+    //imshow("YOLOv4-Detections", frame);
+    //waitKey(0);
     return 0;
 }
